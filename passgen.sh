@@ -1,40 +1,65 @@
 #!/bin/bash
 # MIT License Copyright (c) 2021 Jeremias Grym
-# version 0.1
+# version 0.2.1
 
-# first check for no command line arguments
+function help_text() {
+    echo "Usage: passgen [OPTION] [LENGTH]"
+    echo "Default length is 8, but 4 for digits"; echo
+    echo "-d, --pin     for digits only; useful for generating PIN or similar"
+    echo "-c, --letter  for letters only, both UPPER- and lowercase"
+    echo "-s, --pass    for digits, letters and special characters !@#$%&"; echo
+    exit 1
+}
 
+#with no arguments, default to length 8 with uppercase, lowercase and numbers
+#with --help as only argument, print help text
 if [ -z $1 ]
 then
-    echo "-d [number] for number of digits"
-    echo "-c [number] for number of characters only"
-    echo "-p [number] for number of chars with specials"
+    random=$(cat /dev/urandom | tr -dc '0-9A-Za-z' | head -c 8)
+    echo $random
     exit 1
+elif [ $1 = '--help' ]
+then
+    help_text
+fi
 
-#/dev/urandom for random data
-#use tr to filter out the characters we want
-#use head for the number of chars we want to output
+#default to length 8 if not LENGTH is specified
+if [ -z $2 ]
+then
+    length=8
+else
+    length=$2
+fi
 
-elif [ $1 = '-d' ]
+#default to length 4 for digits only
+if [ $1 = '-d' ] || [ $1 = '--pin' ]
 then
-    random=$(cat /dev/urandom | tr -dc '0-9' | head -c $2)
-elif [ $1 = '-c' ]
+    if [ -z $2 ]
+    then
+        length=4
+    else
+        length=$2
+    fi
+    random=$(cat /dev/urandom | tr -dc '0-9' | head -c $length)
+elif [ $1 = '-c' ] || [ $1 = '--letter' ]
 then
-    random=$(cat /dev/urandom | tr -dc '0-9A-Za-z' | head -c $2)
-elif [ $1 = '-p' ]
+    random=$(cat /dev/urandom | tr -dc 'A-Za-z' | head -c $length)
+elif [ $1 = '-s' ] || [ $1 = '--pass' ]
 then
-    random=$(cat /dev/urandom | tr -dc '0-9A-Za-z!@#$%&=+' | head -c $2)
+    random=$(cat /dev/urandom | tr -dc '0-9A-Za-z!@#$%&' | head -c $length)
 
 #naive regex to regenerate password until it contains at least one of each:
 #lower case, upper case, number, special character
-
     while ! [[ $random =~ [a-z]+ &&
                $random =~ [A-Z]+ &&
                $random =~ [0-9]+ &&
-               $random =~ [\!\@\#\$\%\&\=\+]+ ]]
-    do
-        random=$(cat /dev/urandom | tr -dc '0-9A-Za-z!@#$%&=+' | head -c $2)
-    done
+               $random =~ [\!\@\#\$\%\&]+ ]]
+        do
+            random=$(cat /dev/urandom | tr -dc '0-9A-Za-z!@#$%&=+' | head -c $length)
+        done
+#for unknown options, print the help text
+else
+    help_text
 fi
 
 echo "$random"
