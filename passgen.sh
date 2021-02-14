@@ -7,7 +7,7 @@ function help_text() {
     echo "Default length is 8, but 4 for digits"; echo
     echo "-d, --pin     for digits only; useful for generating PIN or similar"
     echo "-c, --letter  for letters only, both UPPER- and lowercase"
-    echo "-s, --pass    for digits, letters and special characters !@#$%&"; echo
+    echo "-p, --pass    for digits, letters and special characters !@#$%&"; echo
     exit 1
 }
 
@@ -44,7 +44,7 @@ then
 elif [ $1 = '-c' ] || [ $1 = '--letter' ]
 then
     random=$(cat /dev/urandom | tr -dc 'A-Za-z' | head -c $length)
-elif [ $1 = '-s' ] || [ $1 = '--pass' ]
+elif [ $1 = '-p' ] || [ $1 = '--pass' ]
 then
     random=$(cat /dev/urandom | tr -dc '0-9A-Za-z!@#$%&' | head -c $length)
 
