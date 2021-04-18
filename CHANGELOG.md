@@ -12,3 +12,6 @@
 - Implemented --help as a function
 - Implemented both short and long options
 - Added Changelog and updated Readme
+
+## Version 0.2.1
+- Default length for passphrase is now 10 characters

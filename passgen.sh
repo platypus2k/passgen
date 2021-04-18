@@ -4,18 +4,18 @@
 
 function help_text() {
     echo "Usage: passgen [OPTION] [LENGTH]"
-    echo "Default length is 8, but 4 for digits"; echo
+    echo "Default length is 10, but 4 for digits"; echo
     echo "-d, --pin     for digits only; useful for generating PIN or similar"
     echo "-c, --letter  for letters only, both UPPER- and lowercase"
     echo "-p, --pass    for digits, letters and special characters !@#$%&"; echo
     exit 1
 }
 
-#with no arguments, default to length 8 with uppercase, lowercase and numbers
+#with no arguments, default to length 10 with uppercase, lowercase and numbers
 #with --help as only argument, print help text
 if [ -z $1 ]
 then
-    random=$(cat /dev/urandom | tr -dc '0-9A-Za-z' | head -c 8)
+    random=$(cat /dev/urandom | tr -dc '0-9A-Za-z' | head -c 10)
     echo $random
     exit 1
 elif [ $1 = '--help' ]
@@ -23,10 +23,10 @@ then
     help_text
 fi
 
-#default to length 8 if not LENGTH is specified
+#default to length 10 if not LENGTH is specified
 if [ -z $2 ]
 then
-    length=8
+    length=10
 else
     length=$2
 fi

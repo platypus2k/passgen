@@ -2,7 +2,7 @@
 Its purpose is to generate safe, usable passwords for different services online. You have to remeber them, or store them safely somewhere.
 
 	Usage: passgen [OPTION] [LENGTH]
-	Default length is 8, but 4 for digits
+	Default length is 10, but 4 for digits
 	-d, --pin     for digits only; useful for generating PIN or similar
 	-c, --letter  for letters only, both UPPER- and lowercase
 	-p, --pass    for digits, letters and special characters !@#$%&
